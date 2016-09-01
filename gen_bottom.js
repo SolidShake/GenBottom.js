@@ -6,7 +6,7 @@ function Gen_bottom_func() {
   this.width = 100;
   this.height = 100;
   this.deep = 10;
-
+  
   function matrixArray(rows, colomns) {
     var arr = [];
     for(var i = 0; i < colomns; i++) {
@@ -27,9 +27,9 @@ function Gen_bottom_func() {
         matrix_of_coordinates[i][j] = this.deep;
       }
     }
-    return matrix_of_coordinates[x][y];
+    return matrix_of_coordinates[x][y]; 
   }
-
+  
   //генерация наклонного дна
   this.get_inclined_bottom = function(x, y, alpha) {
   	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
@@ -41,14 +41,14 @@ function Gen_bottom_func() {
     }
     return matrix_of_coordinates[x][y];
   }
-
+  
   //генерация гладкого дна
   this.get_plain_bottom = function(x, y, period, amplitude) {
-  	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
+   	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
 
   	for(var i = 0; i <= this.width; i++) {
       for(var j = 0; j <= this.height; j++) {
-        matrix_of_coordinates[i][j] = this.deep + (amplitude/2 * Math.sin((2 * Math.PI / period * i)) * Math.sin((2 * Math.PI / period * j)));
+        matrix_of_coordinates[i][j] = this.deep + (amplitude * Math.sin((2 * Math.PI / period * i)) * Math.sin((2 * Math.PI / period * j)));
       }
     }
     return matrix_of_coordinates[x][y];
