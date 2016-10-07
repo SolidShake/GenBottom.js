@@ -20,7 +20,7 @@ function Gen_bottom_func() {
 
   //генерация плоского дна
   this.get_flat_bottom = function(x, y) {
-  	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
+    var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
 
     for(var i = 0; i <= this.width; i++) {
       for(var j = 0; j <= this.height; j++) {
@@ -32,9 +32,9 @@ function Gen_bottom_func() {
       
   //генерация наклонного дна
   this.get_inclined_bottom = function(x, y, alpha) {
-  	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
+    var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
 
-  	for(var i = 0; i <= this.width; i++) {
+    for(var i = 0; i <= this.width; i++) {
       for(var j = 0; j <= this.height; j++) {
         matrix_of_coordinates[i][j] = this.deep + Math.tan(alpha * Math.PI / 180) * j;
       }
@@ -44,9 +44,9 @@ function Gen_bottom_func() {
   
   //генерация гладкого дна
   this.get_plain_bottom = function(x, y, period, amplitude) {
-   	var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
+    var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
 
-  	for(var i = 0; i <= this.width; i++) {
+    for(var i = 0; i <= this.width; i++) {
       for(var j = 0; j <= this.height; j++) {
         matrix_of_coordinates[i][j] = this.deep + (amplitude * Math.sin((2 * Math.PI / period * i)) * Math.sin((2 * Math.PI / period * j)));
       }
@@ -73,10 +73,34 @@ function Gen_bottom_inter() {
     }
     return arr;
   }
+  
+  //преобразование одномерного массива в двумерный из-за специфики реализации
+  function sort(array) {
+    var nArr = [];
+    var k = 0, l = 0;
+    for(var i = 0; i < array.length; i++) {
+      if(i === 0) {
+        nArr[k] = [];
+        nArr[k][l] = array[0];
+      }
+      else if(array[i][0] === array[i-1][0]) {
+        l++;
+      nArr[k][l] = array[i];
+      } else {
+      l = 0;
+      k++;
+      nArr[k] = [];
+      nArr[k][l] = array[i];
+      }
+    }
+    return nArr;
+  }
 
   //интерполирующая функция (билинейная интерполяция)
   this.interpolate = function(_x, _y, dataArray) {
     var matrix_of_coordinates = matrixArray(this.width + 1, this.height + 1);
+    
+    dataArray = sort(dataArray);
 
     var x1_ind = 0;
     var x2_ind = 1;
@@ -106,6 +130,9 @@ function Gen_bottom_inter() {
 
                 matrix_of_coordinates[x][y] = f_q11*(x2-x)*(y2-y)/((x2-x1)*(y2-y1)) + f_q21*(x-x1)*(y2-y)/((x2-x1)*(y2-y1)) + f_q12*(x2-x)*(y-y1)/((x2-x1)*(y2-y1)) + f_q22*(x-x1)*(y-y1)/((x2-x1)*(y2-y1));
       }
+      y1_ind = 0;
+      y2_ind = 1;
+      
     }
     return matrix_of_coordinates[_x][_y];
   }
